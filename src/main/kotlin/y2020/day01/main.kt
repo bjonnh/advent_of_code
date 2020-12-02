@@ -5,118 +5,113 @@ import kotlin.system.measureNanoTime
 import kotlin.system.measureTimeMillis
 
 fun main() {
-    var case1: Int? = null
-    var case2: Int? = null
-
     val values: IntArray
     measureNanoTime {
         //println("Reading data")
         // A version that use a hard-coded array to demonstrate how fast it is
         values = makeArray() //File("data/input_puzzle_1.csv").readLines().map { it.toInt() }.toIntArray()
-    }.let { println("Reading the file took ${it/1_000_000.0} ms") }
+    }.let { println("Reading the file took ${it / 1_000_000.0} ms") }
 
     println("Lets run the crazy optimized version")
-    crazyOpt(values)
+    run {
+        val (v1, v2) = crazyOpt(values)
+        println("Values: $v1 $v2")
+    }
     println("Lets run the intermediary version")
-    intermediary(values)
+    run {
+        val (v1, v2) = intermediary(values)
+        println("Values: $v1 $v2")
+    }
     println("Lets run the dumb version")
-    mainDumb(values)
+    run {
+        val (v1, v2) = mainDumb(values)
+        println("Values: $v1 $v2")
+    }
 }
 
-fun mainDumb(values: IntArray) {
+fun mainDumb(values: IntArray): Pair<Int?, Int?> {
     var case1: Int? = null
     var case2: Int? = null
 
-    val count = measureTimeMillis {
-        // It is fast enough that we don't need to reduce complexity
-        // We could have exited the loops as soon as an answer is found
-        // We also don't need to do the full permutations 3 times (2000^3)
-        // again it took a few ms to find the answer so… not worth it here.
+    // It is fast enough that we don't need to reduce complexity
+    // We could have exited the loops as soon as an answer is found
+    // We also don't need to do the full permutations 3 times (2000^3)
+    // again it took a few ms to find the answer so… not worth it here.
 
-        values.forEach { v1 ->
-            values.forEach { v2 ->
+    values.forEach { v1 ->
+        values.forEach { v2 ->
+            if ((v1 + v2) == 2020) {
+                case1 = v1 * v2
+            }
+
+            values.forEach { v3 ->
+                if ((v1 + v2 + v3) == 2020) {
+                    case2 = v1 * v2 * v3
+                }
+            }
+        }
+    }
+
+    return Pair(case1, case2)
+}
+
+fun intermediary(values: IntArray): Pair<Int?, Int?> {
+    var case1: Int? = null
+    var case2: Int? = null
+
+    values.forEach out@{ v1 ->
+        values.forEach { v2 ->
+            if (case1 == null) {
                 if ((v1 + v2) == 2020) {
                     case1 = v1 * v2
                 }
+            }
 
+            if (case2 == null) {
                 values.forEach { v3 ->
                     if ((v1 + v2 + v3) == 2020) {
                         case2 = v1 * v2 * v3
                     }
                 }
             }
+
+            if ((case1 != null) && (case2 != null)) return@out
         }
     }
 
-    println("It took me $count ms")
-    println("Solution 1: $case1")
-    println("Solution 2: $case2")
+    return Pair(case1, case2)
 }
 
-fun intermediary(values: IntArray) {
+fun crazyOpt(values: IntArray): Pair<Int?, Int?> {
     var case1: Int? = null
     var case2: Int? = null
 
-    val count = measureTimeMillis {
-        values.forEach out@{ v1 ->
-            values.forEach { v2 ->
+    run out@{
+        for (i in values.indices) {
+            val v1 = values[i]
+            for (j in i until values.size) {
+                val v2 = values[j]
                 if (case1 == null) {
                     if ((v1 + v2) == 2020) {
                         case1 = v1 * v2
                     }
                 }
+                if ((case2 == null) && (v1 + v2) < 2020) {
+                    for (k in j until values.size) {
+                        val v3 = values[k]
 
-                if (case2 == null) {
-                    values.forEach { v3 ->
                         if ((v1 + v2 + v3) == 2020) {
                             case2 = v1 * v2 * v3
                         }
                     }
                 }
-
                 if ((case1 != null) && (case2 != null)) return@out
             }
         }
     }
 
-    println("It took me $count ms")
-    println("Solution 1: $case1")
-    println("Solution 2: $case2")
-}
 
-fun crazyOpt(values: IntArray) {
-    var case1: Int? = null
-    var case2: Int? = null
-
-    val count = measureNanoTime {
-        run out@{
-            for (i in values.indices) {
-                val v1 = values[i]
-                for (j in i until values.size) {
-                    val v2 = values[j]
-                    if (case1 == null) {
-                        if ((v1 + v2) == 2020) {
-                            case1 = v1 * v2
-                        }
-                    }
-                    if ((case2 == null) && (v1 + v2) < 2020) {
-                        for (k in j until values.size) {
-                            val v3 = values[k]
-
-                            if ((v1 + v2 + v3) == 2020) {
-                                case2 = v1 * v2 * v3
-                            }
-                        }
-                    }
-                    if ((case1 != null) && (case2 != null)) return@out
-                }
-            }
-        }
-    }
-
-    println("It took me ${count / 1_000_000.0} ms")
-    println("Solution 1: $case1")
-    println("Solution 2: $case2")
+    return Pair(case1, case2)
 }
 
 fun makeArray() =
@@ -133,4 +128,4 @@ fun makeArray() =
         1916, 1411, 1539, 1963, 1874, 1898, 1951, 1292, 1366, 1912, 1369, 1478, 1359, 1859, 1421, 1384, 1534, 1283,
         1913, 1794, 1494, 1860, 1312, 1869, 1730, 1510, 1319, 1428, 1706, 1432, 1532
     ) // .sortedArray() // If you sort the array you divide the necessary time for the loops by a factor ~2, but
-      // then our loading is much much slower
+// then our loading is much much slower
