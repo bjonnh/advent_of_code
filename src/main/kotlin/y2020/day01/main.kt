@@ -80,23 +80,26 @@ fun crazyOpt(values: Array<Int>) {
     var case2: Int? = null
 
     val count = measureTimeMillis {
-        for (i in 0..values.size) {
-            val v1 = values[i]
-            for (j in i..values.size) {
-                val v2 = values[j]
-                if (case1 != null) {
-                    if ((v1 + v2) == 2020) {
-                        case1 = v1 * v2
-                    }
-                }
-                if (case2 != null) {
-                    for (k in j..values.size) {
-                        val v3 = values[j]
-
-                        if ((v1 + v2 + v3) == 2020) {
-                            case2 = v1 * v2 * v3
+        run out@{
+            for (i in 0..values.size) {
+                val v1 = values[i]
+                for (j in i..values.size) {
+                    val v2 = values[j]
+                    if (case1 != null) {
+                        if ((v1 + v2) == 2020) {
+                            case1 = v1 * v2
                         }
                     }
+                    if (case2 != null) {
+                        for (k in j..values.size) {
+                            val v3 = values[j]
+
+                            if ((v1 + v2 + v3) == 2020) {
+                                case2 = v1 * v2 * v3
+                            }
+                        }
+                    }
+                    if ((case1 == null) && (case2 == null)) return@out
                 }
             }
         }
