@@ -1,6 +1,7 @@
 package y2020.day01
 
 import java.io.File
+import kotlin.system.measureNanoTime
 import kotlin.system.measureTimeMillis
 
 fun main() {
@@ -86,7 +87,7 @@ fun crazyOpt(values: IntArray) {
     var case1: Int? = null
     var case2: Int? = null
 
-    val count = measureTimeMillis {
+    val count = measureNanoTime {
         run out@{
             for (i in values.indices) {
                 val v1 = values[i]
@@ -112,7 +113,7 @@ fun crazyOpt(values: IntArray) {
         }
     }
 
-    println("It took me $count ms")
+    println("It took me ${count / 1_000_000.0} ms")
     println("Solution 1: $case1")
     println("Solution 2: $case2")
 }
