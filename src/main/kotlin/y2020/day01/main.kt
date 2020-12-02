@@ -41,6 +41,8 @@ fun main() {
 
     println("Lets run the dumb version")
     mainDumb(values)
+    println("Lets run the crazy optimized version")
+    mainDumb(values)
 }
 
 fun mainDumb(values: Array<Int>) {
@@ -66,6 +68,44 @@ fun mainDumb(values: Array<Int>) {
                 }
             }
         }
+    }
+
+    println("It took me $count ms")
+    println("Solution 1: $case1")
+    println("Solution 2: $case2")
+}
+
+fun crazyOpt(values: Array<Int>) {
+    var case1: Int? = null
+    var case2: Int? = null
+
+    val count = measureTimeMillis {
+        // It is fast enough that we don't need to reduce complexity
+        // We could have exited the loops as soon as an answer is found
+        // We also don't need to do the full permutations 3 times (2000^3)
+        // again it took a few ms to find the answer so… not worth it here.
+
+        for (i in 0..values.size) {
+            val v1 = values[i]
+            for (j in i..values.size) {
+                val v2 = values[j]
+                if (case1 != null) {
+                    if ((v1 + v2) == 2020) {
+                        case1 = v1 * v2
+                    }
+                }
+                if (case2 != null) {
+                    for (k in j..values.size) {
+                        val v3 = values[j]
+
+                        if ((v1 + v2 + v3) == 2020) {
+                            case2 = v1 * v2 * v3
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     println("It took me $count ms")
