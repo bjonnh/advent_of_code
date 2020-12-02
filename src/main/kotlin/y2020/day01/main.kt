@@ -85,12 +85,12 @@ fun crazyOpt(values: Array<Int>) {
                 val v1 = values[i]
                 for (j in i until values.size) {
                     val v2 = values[j]
-                    if (case1 != null) {
+                    if (case1 == null) {
                         if ((v1 + v2) == 2020) {
                             case1 = v1 * v2
                         }
                     }
-                    if (case2 != null) {
+                    if (case2 == null) {
                         for (k in j until values.size) {
                             val v3 = values[k]
 
