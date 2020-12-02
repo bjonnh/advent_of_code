@@ -7,10 +7,10 @@ fun main() {
     var case1: Int? = null
     var case2: Int? = null
 
-    val values: List<Int>
+    val values: Array<Int>
     measureTimeMillis {
         println("Reading data")
-        values = File("data/input_puzzle_1.csv").readLines().map { it.toInt() }
+        values = File("data/input_puzzle_1.csv").readLines().map { it.toInt() }.toTypedArray()
     }.let { println("Reading the file took $it ms") }
 
     val count = measureTimeMillis {
@@ -43,7 +43,7 @@ fun main() {
     mainDumb(values)
 }
 
-fun mainDumb(values: List<Int>) {
+fun mainDumb(values: Array<Int>) {
     var case1: Int? = null
     var case2: Int? = null
 
