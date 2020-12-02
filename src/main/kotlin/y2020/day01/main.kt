@@ -38,11 +38,11 @@ fun main() {
     println("It took me $count ms")
     println("Solution 1: $case1")
     println("Solution 2: $case2")
-
+    println("Lets run the crazy optimized version")
+    crazyOpt(values)
     println("Lets run the dumb version")
     mainDumb(values)
-    println("Lets run the crazy optimized version")
-    mainDumb(values)
+
 }
 
 fun mainDumb(values: Array<Int>) {
@@ -81,9 +81,9 @@ fun crazyOpt(values: Array<Int>) {
 
     val count = measureTimeMillis {
         run out@{
-            for (i in 0..values.size) {
+            for (i in values.indices) {
                 val v1 = values[i]
-                for (j in i..values.size) {
+                for (j in i until values.size) {
                     val v2 = values[j]
                     if (case1 != null) {
                         if ((v1 + v2) == 2020) {
@@ -91,19 +91,18 @@ fun crazyOpt(values: Array<Int>) {
                         }
                     }
                     if (case2 != null) {
-                        for (k in j..values.size) {
-                            val v3 = values[j]
+                        for (k in j until values.size) {
+                            val v3 = values[k]
 
                             if ((v1 + v2 + v3) == 2020) {
                                 case2 = v1 * v2 * v3
                             }
                         }
                     }
-                    if ((case1 == null) && (case2 == null)) return@out
+                    if ((case1 != null) && (case2 != null)) return@out
                 }
             }
         }
-
     }
 
     println("It took me $count ms")
