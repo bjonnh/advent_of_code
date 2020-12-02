@@ -97,7 +97,7 @@ fun crazyOpt(values: IntArray) {
                             case1 = v1 * v2
                         }
                     }
-                    if (case2 == null) {
+                    if ((case2 == null) && (v1 + v2) < 2020) {
                         for (k in j until values.size) {
                             val v3 = values[k]
 
