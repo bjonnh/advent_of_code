@@ -80,11 +80,6 @@ fun crazyOpt(values: Array<Int>) {
     var case2: Int? = null
 
     val count = measureTimeMillis {
-        // It is fast enough that we don't need to reduce complexity
-        // We could have exited the loops as soon as an answer is found
-        // We also don't need to do the full permutations 3 times (2000^3)
-        // again it took a few ms to find the answer so… not worth it here.
-
         for (i in 0..values.size) {
             val v1 = values[i]
             for (j in i..values.size) {
