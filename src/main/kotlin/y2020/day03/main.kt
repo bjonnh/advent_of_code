@@ -2,11 +2,9 @@ package y2020.day03
 
 import java.io.File
 
-// File is is src/main/kotlin/y2020/day03
-
 class InfiniteMap(mapSource: List<String>) {
-    val map: Array<BooleanArray> = mapSource.mapIndexed { sX, line ->
-        line.mapIndexed { sY, item ->
+    val map: Array<BooleanArray> = mapSource.map { line ->
+        line.map { item ->
             when (item) {
                 '.' -> false
                 '#' -> true
