@@ -12,7 +12,7 @@ fun String?.rMatches(r: String) = (this?.matches(r.toRegex()) == true)
 fun count(data: List<String>): Pair<Int, Int> {
     var (validPassports, validPassports2) = Pair(0, 0)
 
-    data.map { it ->
+    data.forEach { it ->
         val pMap = it.split(" ", "\n").filter { it.isNotBlank() }.map {
             it.split(":").let { el -> el[0] to el[1] }
         }.toMap()
