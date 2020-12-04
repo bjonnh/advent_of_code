@@ -9,7 +9,7 @@ infix fun String?.inRange(v: Pair<Int, Int>): Boolean = this?.toIntOrNull() in v
 fun String?.rFindGroups(r: String) = r.toRegex().find(this ?: "")?.groupValues
 fun String?.rMatches(r: String) = (this?.matches(r.toRegex()) == true)
 
-fun main() { // Today is ugly little functional version day
+fun main() = // Today is ugly little functional version day
     File("data/2020/day04/input.txt").readText().split("\n\n").map { it ->
         it.split(" ", "\n").filter { it.isNotBlank() }.map { it.split(":").let { el -> el[0] to el[1] } }.toMap()
     }.filter { it.keys.containsAll(required) }.also { println("Part1: ${it.size}") }.filter { m ->
@@ -18,4 +18,3 @@ fun main() { // Today is ugly little functional version day
                     (it[1] inRange (59 to 76)) || (it[2] inRange (150 to 193))
                 } == true) && (m["hcl"].rMatches("#[0-9a-f]{6}")) && (m["ecl"] in validEyes) && (m["pid"].rMatches("[0-9]{9}"))
     }.let { println("Part2: ${it.size}") }
-}
