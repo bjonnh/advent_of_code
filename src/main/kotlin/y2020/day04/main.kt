@@ -1,13 +1,12 @@
 package y2020.day04
 
+import helpers.inRange
+import helpers.rFindGroups
+import helpers.rMatches
 import java.io.File
 
 val required = setOf("byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid")
 val validEyes = setOf("amb", "blu", "brn", "gry", "grn", "hzl", "oth")
-
-infix fun String?.inRange(v: Pair<Int, Int>): Boolean = this?.toIntOrNull() in v.first..v.second
-fun String?.rFindGroups(r: String) = r.toRegex().find(this ?: "")?.groupValues
-fun String?.rMatches(r: String) = (this?.matches(r.toRegex()) == true)
 
 fun main() = // Today is ugly little functional version day
     File("data/2020/day04/input.txt").readText().split("\n\n").map { it ->
