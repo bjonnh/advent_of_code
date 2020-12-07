@@ -1,7 +1,6 @@
 package y2020.day07
 
 import helpers.linesFile
-import java.io.File
 
 data class Bag(
     val name: String,
