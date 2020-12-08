@@ -30,9 +30,7 @@ class Machine {
     fun execute(composed: String): Int {
         val split = composed.split(" ")
         return when (split.size) {
-            1 -> {
-                resolve(split[0])
-            }
+            1 -> resolve(split[0])
             2 -> {
                 if (split[0] == "NOT") 65535 - resolve(split[1])
                 else throw UnhandledOperation(composed)
