@@ -1,7 +1,6 @@
 package y2020.day08
 
 import helpers.linesFile
-import kotlin.system.measureTimeMillis
 
 sealed class Instruction
 
@@ -17,6 +16,7 @@ enum class State {
 
 class Machine {
     var state = State.STOPPED
+    var logging = true
     val seenInstruction = mutableSetOf<Int>()
     val jumpsOrNopsSeen = mutableSetOf<Pair<Int, Instruction>>()
     val instructions = mutableListOf<Instruction>()
@@ -39,10 +39,10 @@ class Machine {
             }
             is JMP -> {
                 ip += instruction.value
-                jumpsOrNopsSeen.add(Pair(pos, instruction))
+                if (logging) jumpsOrNopsSeen.add(Pair(pos, instruction))
             }
             else -> {
-                jumpsOrNopsSeen.add(Pair(pos, instruction))
+                if (logging) jumpsOrNopsSeen.add(Pair(pos, instruction))
                 ip += 1
             }
         }
@@ -60,11 +60,12 @@ class Machine {
         acc = 0
         seenInstruction.clear()
         jumpsOrNopsSeen.clear()
-        instructions.clear()
     }
 
-    fun load(newInstructions: List<Instruction>) =
+    fun load(newInstructions: List<Instruction>) {
+        instructions.clear()
         instructions.addAll(newInstructions)
+    }
 
     fun patch(pos: Int, instruction: Instruction) {
         instructions[pos] = instruction
@@ -89,13 +90,22 @@ fun run(input: List<String>): Pair<Int, Int> {
     part1 = machine.acc
 
     // part2
+    machine.logging = false
     val ops = machine.jumpsOrNopsSeen.toList()
+    var oldInstruction: Pair<Int, Instruction>? = null
     ops.forEach { // This is a dynamic patcher
         machine.reset()
-        machine.load(program)
+        oldInstruction?.let { machine.patch(it.first, it.second) }
+
         when (val inst = it.second) {
-            is NOP -> machine.patch(it.first, JMP(inst.value))
-            is JMP -> machine.patch(it.first, NOP(inst.value))
+            is NOP -> {
+                oldInstruction = Pair(it.first, machine.instructions[it.first])
+                machine.patch(it.first, JMP(inst.value))
+            }
+            is JMP -> {
+                oldInstruction = Pair(it.first, machine.instructions[it.first])
+                machine.patch(it.first, NOP(inst.value))
+            }
         }
         machine.run()
         if (machine.state == State.FINISHED) {
@@ -107,5 +117,5 @@ fun run(input: List<String>): Pair<Int, Int> {
 }
 
 fun main() {
-       println(run(linesFile("/home/bjo/Software/Mine/advent_of_code/data/2020/08_input.txt")))
+    println(run(linesFile("/home/bjo/Software/Mine/advent_of_code/data/2020/08_input.txt")))
 }
