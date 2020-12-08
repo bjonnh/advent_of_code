@@ -4,7 +4,7 @@ import org.openjdk.jmh.annotations.Benchmark
 import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.Setup
 import org.openjdk.jmh.annotations.State
-
+/*
 @State(Scope.Thread)
 open class Day1Bench {
     private lateinit var values: IntArray
@@ -23,3 +23,4 @@ open class Day1Bench {
     @Benchmark
     fun Intermediary(): Pair<Int?, Int?> = intermediary(values)
 }
+*/

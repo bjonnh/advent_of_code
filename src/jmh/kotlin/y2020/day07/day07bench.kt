@@ -5,7 +5,7 @@ import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.Setup
 import org.openjdk.jmh.annotations.State
 import java.io.File
-
+/*
 @State(Scope.Thread)
 open class Day7Bench {
     private lateinit var values: Map<String, Bag>
@@ -27,3 +27,4 @@ open class Day7Bench {
     fun naive(): Int = values.count { (k, v) -> v.contains("shiny gold") }
 
 }
+*/

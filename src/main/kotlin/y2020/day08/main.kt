@@ -1,6 +1,7 @@
 package y2020.day08
 
 import helpers.linesFile
+import kotlin.system.measureTimeMillis
 
 sealed class Instruction
 
@@ -70,9 +71,10 @@ class Machine {
     }
 }
 
-fun main() {
+fun run(input: List<String>): Pair<Int, Int> {
+    var part1 = 0
+    var part2 = 0
     val machine = Machine()
-    val input = linesFile("data/2020/08_input.txt")
     val program = input.map {
         val (inst, value) = it.split(" ")
         when (inst) {
@@ -84,7 +86,8 @@ fun main() {
     }
     machine.load(program)
     machine.run()
-    println("Part1 ${machine.acc}")
+    part1 = machine.acc
+
     // part2
     val ops = machine.jumpsOrNopsSeen.toList()
     ops.forEach { // This is a dynamic patcher
@@ -96,8 +99,13 @@ fun main() {
         }
         machine.run()
         if (machine.state == State.FINISHED) {
-            println("Part2 ${machine.acc}")
+            part2 = machine.acc
             return@forEach
         }
     }
+    return Pair(part1, part2)
+}
+
+fun main() {
+       println(run(linesFile("/home/bjo/Software/Mine/advent_of_code/data/2020/08_input.txt")))
 }

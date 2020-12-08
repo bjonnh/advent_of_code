@@ -15,13 +15,13 @@ plugins {
 }
 
 application {
-    mainClass.set("y2020.day07.MainKt")
+    mainClass.set("y2020.day08.MainKt")
     // applicationDefaultJvmArgs = listOf("-Xmx3072m")
 }
 
 val jar by tasks.getting(Jar::class) {
     manifest {
-        attributes["Main-Class"] = "y2020.day07.MainKt"
+        attributes["Main-Class"] = "y2020.day08.MainKt"
     }
 }
 
