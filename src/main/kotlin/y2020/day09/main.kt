@@ -16,7 +16,10 @@ fun main() {
             (lines.indices).map { i ->
                 (2 until lines.size - i).forEach { j ->
                     val arr = lines.subList(i, i + j)
-                    if (arr.sum() == lines[index]) println("Found the range $i $j part2 result is ${(arr.minOrNull() ?: 0) + (arr.maxOrNull() ?: 0)}")
+                    if (arr.sum() == lines[index]) {
+                        println("Found the range $i $j part2 result is ${arr.minOrNull()!! + arr.maxOrNull()!!}")
+                        return // We are done with the program at this stage
+                    }
                     if (arr.sum() > lines[index]) return@forEach
                 }
             }
