@@ -52,7 +52,7 @@ data class Ship2(var wpE: Int, var wpN: Int, override var latitude: Int = 0, ove
         wpE += v
     }
 
-    override fun right(v: Int) = repeat(Math.floorMod(v / 90, 360)) { wpE = wpN.also { wpN = -wpE } }
+    override fun right(v: Int) = repeat(Math.floorMod(v / 90, 4)) { wpE = wpN.also { wpN = -wpE } }
 }
 
 fun main() {
