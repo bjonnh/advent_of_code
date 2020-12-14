@@ -1,7 +1,8 @@
 package y2020.day14
 
+import helpers.fromBinarytoLong
 import helpers.linesFile
-import kotlin.math.pow
+import helpers.toBinaryPadded
 
 fun main() {
     val currentMask = List(36) { '0' }.toMutableList()
@@ -15,18 +16,18 @@ fun main() {
                 val valueLong = value.toLong()
                 val address = command.substring(4).trimEnd(']').toInt()
 
-                memory[address] = valueLong.toString(2).padStart(36, '0').mapIndexed { idx, it ->
+                memory[address] = valueLong.toBinaryPadded(36).mapIndexed { idx, it ->
                     when (val msk = currentMask[idx]) {
                         'X' -> it
                         else -> msk
                     }
-                }.joinToString("").toLong(2)
+                }.fromBinarytoLong()
 
                 val numberofX = currentMask.count { it == 'X' }
-                val addressPart2 = address.toString(2).padStart(36, '0')
+                val addressPart2 = address.toBinaryPadded(36)
 
-                (0 until 2.0.pow(numberofX.toDouble()).toInt()).map { // Generate all the values that will replace the X
-                    it.toString(2).padStart(numberofX, '0')
+                (0 until 2.shl(numberofX)).map { // Generate all the values that will replace the X
+                    it.toBinaryPadded(numberofX)
                 }.forEach { newVals ->  // And we then replace the X with these
                     var count = 0
                     val addr = currentMask.mapIndexed { idx, it ->
@@ -35,10 +36,11 @@ fun main() {
                             '1' -> '1'
                             else -> newVals[count].also { count++ }
                         }
-                    }.joinToString("").toLong(2)
+                    }.fromBinarytoLong()
                     memory2[addr] = valueLong
                 }
             }
+
         }
     }
     println(memory.values.sum())
