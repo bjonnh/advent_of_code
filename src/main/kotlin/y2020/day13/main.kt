@@ -13,6 +13,7 @@ fun main() {
     var time = 100000000000000L
     val stuff2 = lines[1].split(",").mapIndexed { idx, it -> it to idx }.filter { it.first != "x" }
         .map { it.first.toLong() to it.second.toLong() }
+    println(stuff2)
     var step: Long
     var count = 0
     while (true) {
