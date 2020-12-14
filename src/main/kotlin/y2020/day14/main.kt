@@ -15,14 +15,12 @@ fun main() {
                 val valueLong = value.toLong()
                 val address = command.substring(4).trimEnd(']').toInt()
 
-                val valPart1 = valueLong.toString(2).padStart(36, '0').mapIndexed { idx, it ->
+                memory[address] = valueLong.toString(2).padStart(36, '0').mapIndexed { idx, it ->
                     when (val msk = currentMask[idx]) {
                         'X' -> it
                         else -> msk
                     }
                 }.joinToString("").toLong(2)
-
-                memory[address] = valPart1
 
                 val numberofX = currentMask.count { it == 'X' }
                 val addressPart2 = address.toString(2).padStart(36, '0')
