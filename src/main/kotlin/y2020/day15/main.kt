@@ -9,10 +9,9 @@ fun finalNumCached(list: List<Int>, turns: Int): Int {
     if (num < list.size) return list[num]
     var lastNum = list.last()
     (list.size - 1 until num).forEach { pos ->
-        val oldNum = lastNum
         val value = cache[lastNum]
+        cache[lastNum] = pos
         lastNum = if (value == -1) 0 else pos - value
-        cache[oldNum] = pos
     }
     return lastNum
 }
