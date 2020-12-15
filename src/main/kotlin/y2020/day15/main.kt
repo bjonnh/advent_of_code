@@ -1,20 +1,24 @@
 package y2020.day15
 
-fun finalNumCached(list: List<Long>, turns: Int): Long {
-    val cache = list.mapIndexed { idx, it -> it to idx.toLong() }.toMap().toMutableMap()
+// We can reach sub 300ms with the Epsilon GC compressed pointers and oops, Xshared Xmx and ms of 1g and large pages
+
+fun finalNumCached(list: List<Int>, turns: Int): Int {
+    val cache = IntArray(turns) { -1 }
+    list.forEachIndexed { idx, it -> cache[it] = idx }
     val num = turns - 1
     if (num < list.size) return list[num]
     var lastNum = list.last()
-    (list.size - 1 until num.toLong()).map { pos ->
+    (list.size - 1 until num).forEach { pos ->
         val oldNum = lastNum
-        lastNum = cache[lastNum]?.let { pos - it } ?: 0L
+        val value = cache[lastNum]
+        lastNum = if (value == -1) 0 else pos - value
         cache[oldNum] = pos
     }
     return lastNum
 }
 
 fun main() {
-    val input = listOf(9, 3, 1, 0, 8, 4).map { it.toLong() }
+    val input = listOf(9, 3, 1, 0, 8, 4)
     println(finalNumCached(input, 2020))
-    println(finalNumCached(input, 30000000))
+    println(finalNumCached(input, 30_000_000))
 }
