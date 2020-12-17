@@ -1,6 +1,7 @@
 package y2020.day17
 
 import helpers.linesFile
+import java.lang.RuntimeException
 
 typealias Coordinate = List<Int>
 
@@ -20,7 +21,10 @@ data class ConwayND(
     }
 
     fun load(map: Map<Coordinate, Boolean>) =
-        map.forEach { content[it.key + (0 until dimensions - it.key.size).map { 0 }] = it.value }
+        map.forEach {
+            if (it.key.size > dimensions) throw RuntimeException("Too many dimensions in the input, we don't handle that")
+            content[it.key + (0 until dimensions - it.key.size).map { 0 }] = it.value
+        }
 
     fun numberOfActiveNeighbors(position: Coordinate): Int =
         actOnNeighbor(position) {
