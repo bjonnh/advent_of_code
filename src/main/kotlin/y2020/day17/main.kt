@@ -10,29 +10,25 @@ data class ConwayND(
     val dimensions: Int
 ) {
     var content: MutableMap<Coordinate, Boolean> = mutableMapOf()
-    var initialList: List<List<Int>> = (-1..1).map { listOf(it) }
+    private var initialList: List<List<Int>> = (-1..1).map { listOf(it) }
 
     init {
         repeat(dimensions - 1) {
-            initialList = initialList.flatMap { oldList -> (-1..1).map { oldList + listOf(it) } }
+            initialList = initialList.flatMap { oldList -> (-1..1).mapNotNull { oldList + listOf(it) } }
         }
+        initialList = initialList.filterNot { it.all { it == 0 }}
     }
 
-    fun load(map: Map<Coordinate, Boolean>) {
+    fun load(map: Map<Coordinate, Boolean>) =
         map.forEach { content[it.key + (0 until dimensions - it.key.size).map { 0 }] = it.value }
-    }
 
     fun numberOfActiveNeighbors(position: Coordinate): Int =
         actOnNeighbor(position) {
             content[it] ?: false
         }.count { it }
 
-    fun <T> actOnNeighbor(position: Coordinate, f: (Coordinate) -> T): List<T> {
-        return initialList.mapNotNull {
-            if (it.all { it == 0 }) null
-            else f(position.vecplus(it))
-        }
-    }
+    fun <T> actOnNeighbor(position: Coordinate, f: (Coordinate) -> T): List<T> =
+        initialList.map { f(position.vecplus(it)) }
 
     fun cycle() {
         val newMap = mutableMapOf<Coordinate, Boolean>()
