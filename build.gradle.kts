@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.4.20"
+    kotlin("jvm") version "1.4.21"
     id("me.champeau.gradle.jmh") version "0.5.2"
     application
 }
