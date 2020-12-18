@@ -16,7 +16,7 @@ fun evaluate(operators: List<List<Char>>, input: String): Long {
     val expression = input.trim()
 
     operators.forEach { operator ->
-        do {
+        while (true) {
             val pos = lastOperatorOutsideParenthesis(expression, operator)
             if (pos > 0) {
                 val part1 = expression.substring(0, pos - 1)
@@ -26,8 +26,8 @@ fun evaluate(operators: List<List<Char>>, input: String): Long {
                     '+' -> return evaluate(operators, part1) + evaluate(operators, part2)
                     '*' -> return evaluate(operators, part1) * evaluate(operators, part2)
                 }
-            }
-        } while (pos > 0)
+            } else break
+        }
     }
     if (expression.startsWith('(') && expression.endsWith(')'))
         return evaluate(operators, expression.substring(1, expression.length - 1))
