@@ -16,22 +16,22 @@ fun evaluate(operators: List<List<Char>>, input: String): Long {
     val expression = input.trim()
 
     operators.forEach { operator ->
-        var pos = lastOperatorOutsideParenthesis(expression, operator)
+        do {
+            val pos = lastOperatorOutsideParenthesis(expression, operator)
+            if (pos > 0) {
+                val part1 = expression.substring(0, pos - 1)
+                val part2 = expression.substring(pos)
 
-        while (pos > 0) {
-            val part1 = expression.substring(0, pos - 1)
-            val part2 = expression.substring(pos)
-
-            when (expression[pos - 1]) {
-                '+' -> return evaluate(operators, part1) + evaluate(operators, part2)
-                '*' -> return evaluate(operators, part1) * evaluate(operators, part2)
+                when (expression[pos - 1]) {
+                    '+' -> return evaluate(operators, part1) + evaluate(operators, part2)
+                    '*' -> return evaluate(operators, part1) * evaluate(operators, part2)
+                }
             }
-            if (pos > 0) pos = lastOperatorOutsideParenthesis(expression, operator)
-        }
+        } while (pos > 0)
     }
-    if (expression.startsWith('(') && expression.endsWith(')')) {
+    if (expression.startsWith('(') && expression.endsWith(')'))
         return evaluate(operators, expression.substring(1, expression.length - 1))
-    }
+
     return expression.toLong() // If nothing matched we have a number so we are done \o/
 }
 
