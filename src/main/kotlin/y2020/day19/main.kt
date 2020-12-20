@@ -7,13 +7,13 @@ fun Map<String, String>.toRegStr(rule: String, l: Int = 0): String {
     if (rule == "42 | 42 8") return "(${this.toRegStr(this["42"]!!, l)})+"
     if ((l > 0) && (rule == "42 31 | 42 11 31"))
         return "(${this.toRegStr(this["42"]!!, 0)}){$l}(${this.toRegStr(this["31"]!!, 0)}){$l}"
-    return rule.split("|").map { partOfRule ->
-        partOfRule.trim().split(" ").mapNotNull {
+    return rule.split("|").joinToString("|") { partOfRule ->
+        partOfRule.trim().split(" ").joinToString("") {
             if ((it.startsWith('\"')) && (it.endsWith('\"'))) {
                 it.trim('\"')
             } else "(${toRegStr(this[it]!!, l)})"
-        }.joinToString("")
-    }.joinToString("|")
+        }
+    }
 }
 
 fun main() {
