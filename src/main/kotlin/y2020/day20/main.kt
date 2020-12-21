@@ -20,33 +20,20 @@ class Tile(val input: List<String>) {
     val side4: String = input.map { it.first() }.joinToString("")
     val side2: String = input.map { it.last() }.joinToString("")
 
-    fun sides(): List<String> {
-        return listOf(
-            side1,
-            side2,
-            side3,
-            side4,
-            side1.reversed(),
-            side2.reversed(),
-            side3.reversed(),
-            side4.reversed()
-        )
-    }
+    fun sides(): List<String> =
+        listOf(side1, side2, side3, side4, side1.reversed(), side2.reversed(), side3.reversed(), side4.reversed())
+
 
     fun matches(tile: Tile): List<Int> =
         this.sides().mapIndexed { idx, it -> idx to it }
             .filter { sideHere -> tile.sides().any { sideHere.second == it } }
             .map { it.first }
 
-    fun rotate(): Tile {
-        val out = Array(input.size) { Array(input.size) { '.' } }
-        (input.indices).map { x ->
-            (input.indices).map { y ->
-                out[x][y] = input[input.size - y - 1][x]
-            }
-        }
-        return Tile(out.map { it.joinToString("") })
-    }
+    fun rotate() = Tile((input.indices).map { x ->
+        (input.indices).map { y ->
+            input[input.size - y - 1][x]
+        }.joinToString("")
+    })
 
     fun flipH(): Tile = Tile(input.map { it.reversed() })
     fun flipV(): Tile = Tile(input.reversed())
@@ -90,9 +77,7 @@ fun main() {
         out.filter { (it.first.first == thisOne) || (it.first.second == thisOne) }.map {
             thisOne to if (it.first.first == thisOne) it.first.second else it.first.first
         }
-    }.groupBy { it.first }.map {
-        it.key to it.value.map { it.second }.toSet().toList()
-    }.toMap()
+    }.groupBy { it.first }.map { it.key to it.value.map { it.second }.toSet().toList() }.toMap()
     val corners = tileNeighbors.filter { it.value.size == 2 }
     val part1 = corners.map { it.key }.fold(1L) { acc, value -> acc * value }
     println(part1)
@@ -132,20 +117,17 @@ fun main() {
     while (map.any { it.contains(0) }) {
         (0 until mapSize).forEach { x ->
             (0 until mapSize).forEach { y ->
-                if (map[x][y] == 0) {
+                if (map[x][y] !in mapOfOrientations.keys) {
                     val neighborLeft = if (x > 0) tileNeighbors[map[x - 1][y]] else null
                     val neighborTop = if (y > 0) tileNeighbors[map[x][y - 1]] else null
-                    val neighborRight = if (y < mapSize - 1) tileNeighbors[map[x][y + 1]] else null
-                    val neighborBottom = if (x < mapSize - 1) tileNeighbors[map[x + 1][y]] else null
-                    val neighbors = listOf(neighborBottom, neighborLeft, neighborRight, neighborTop).filterNotNull()
-                    val fnd =
-                        neighbors.fold(tileNeighbors.keys.toSet()) { acc, value -> acc.intersect(value) }.minus(
-                            map.flatMap { it.map { it } }
-                        )
+                    val neighbors = listOf(neighborLeft, neighborTop).filterNotNull()
+                    val fnd = neighbors.fold(tileNeighbors.keys.toSet()) { acc, value -> acc.intersect(value) }.minus(
+                        map.flatMap { it.map { it } }
+                    )
                     if (fnd.size == 1) {
                         map[x][y] = fnd.first()
                         val origTile = data[fnd.first()]!!
-                        val orientedTile = origTile.modifyUntilTrue { newTile ->
+                        val newlyOrientedTile = origTile.modifyUntilTrue { newTile ->
                             if (y > 0) {
                                 if (map[x][y - 1] != 0 && map[x][y - 1] in mapOfOrientations.keys) {
                                     newTile.side4 == mapOfOrientations[map[x][y - 1]]!!.side2
@@ -155,11 +137,10 @@ fun main() {
                                     newTile.side1 == mapOfOrientations[map[x - 1][y]]!!.side3
                                 } else false
                             } else false
-                        }
-                        if (orientedTile != null) {
-                            mapOfOrientations[fnd.first()] = orientedTile
-                            realMap.fillWithTileAt(x, y, orientedTile)
-                        }
+                        } ?: throw RuntimeException("Can't find orientation")
+
+                        mapOfOrientations[fnd.first()] = newlyOrientedTile
+                        realMap.fillWithTileAt(x, y, newlyOrientedTile)
                     }
                 }
             }
@@ -180,12 +161,10 @@ fun main() {
     var snakeCount = 0
     (0 until (iter - 20)).forEach { x ->
         (0 until (iter - 3)).forEach { y ->
-            val realX = x
-            val realY = y
             val match = (0 until 20).flatMap { mapCoordX ->
                 (0 until 3).mapNotNull { mapCoordY ->
                     if (monster[mapCoordY][mapCoordX] == 1) {
-                        snakeMap[realY + mapCoordY][realX + mapCoordX] == 1
+                        snakeMap[y + mapCoordY][x + mapCoordX] == 1
                     } else null
                 }
             }.all { it }
