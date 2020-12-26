@@ -137,10 +137,11 @@ fun main() {
                                     newTile.side1 == mapOfOrientations[map[x - 1][y]]!!.side3
                                 } else false
                             } else false
-                        } ?: throw RuntimeException("Can't find orientation")
-
-                        mapOfOrientations[fnd.first()] = newlyOrientedTile
-                        realMap.fillWithTileAt(x, y, newlyOrientedTile)
+                        }
+                        if (newlyOrientedTile != null) {
+                            mapOfOrientations[fnd.first()] = newlyOrientedTile
+                            realMap.fillWithTileAt(x, y, newlyOrientedTile)
+                        }
                     }
                 }
             }
